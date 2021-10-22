@@ -7,28 +7,21 @@ class Key extends Rect {
         this.isPlayingRoll = false;
     }
 
-    didEnterPressed() {
-        this.attack();
+    isBlack() {
+        return this.color == 0;
     }
 
-    didEnterSelected() {
-        this.select();
+    mousePressed() {
+        if (this.isMouseOver()) {
+            this.attack();
+            return true;
+        }
+
+        return false;
     }
 
-    didEnterReleased() {
+    mouseReleased() {
         this.release();
-    }
-
-    didExitPressed() {
-        this.release();
-    }
-
-    didExitSelected() {
-        return;
-    }
-
-    didExitReleased() {
-        return;
     }
 
     update() {
@@ -37,42 +30,12 @@ class Key extends Rect {
         }
 
         if (this.isMouseOver()) {
-            if (mouseIsPressed) {
-                if (this.state == RectState.SELECTED) {
-                    this.didExitSelected();
-                    this.didEnterPressed();
-                }
-                else if (this.state == RectState.RELEASED) {
-                    this.didExitReleased();
-                    this.didEnterPressed();
-                }
-
-                this.setState(RectState.PRESSED);
-            }
-            else {
-                if (this.state == RectState.PRESSED) {
-                    this.didExitPressed();
-                    this.didEnterSelected();
-                }
-                else if (this.state == RectState.RELEASED) {
-                    this.didExitReleased();
-                    this.didEnterSelected();
-                }
-
-                this.setState(RectState.SELECTED);
+            if (!this.isSelected() && !this.isPressed()) {
+                this.select();
             }
         }
         else {
-            if (this.state == RectState.SELECTED) {
-                this.didExitSelected();
-                this.didEnterReleased();
-            }
-            else if (this.state == RectState.PRESSED) {
-                this.didExitPressed();
-                this.didEnterReleased();
-            }
-
-            this.setState(RectState.RELEASED);
+            this.release();
         }
     }
 
@@ -100,7 +63,7 @@ class Key extends Rect {
     attack(fromRoll = false) {
         this.setState(RectState.PRESSED);
         let note = Tone.Frequency(this.pitch, "midi").toNote();
-        piano.sampler.triggerAttack(note);
+        piano.sampler.triggerAttack(note, Tone.context.currentTime);
         this.isPlaying = true;
         this.isPlayingRoll = fromRoll;
     }
@@ -120,7 +83,7 @@ class Key extends Rect {
     release() {
         this.setState(RectState.RELEASED);
         let note = Tone.Frequency(this.pitch, "midi").toNote();
-        piano.sampler.triggerRelease(note);
+        piano.sampler.triggerRelease(note, Tone.context.currentTime);
         this.isPlayingRoll = false;
     }
 

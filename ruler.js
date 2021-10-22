@@ -32,7 +32,7 @@ class RulerHead {
 
     moveTo(x) {
         this.x = x - this.width/2;
-        this.x = constrain(this.x, roll.x - this.width/2, roll.x + roll.getLength())
+        this.x = constrain(this.x, roll.x - this.width/2, roll.x + roll.getLength());
     }
 
     draw() {

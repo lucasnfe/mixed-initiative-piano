@@ -24,7 +24,7 @@ class Note extends Rect {
     }
 
     mousePressed() {
-        if (this.isMouseOver()) {
+        if (this.isMouseOver(-scroll)) {
             this.clickWidth = this.width;
 
             this.clickPos.x = this.x;
@@ -32,7 +32,7 @@ class Note extends Rect {
 
             this.clickDelta.x = this.x - mouseX;
             this.clickDelta.y = this.y - mouseY;
-            this.state = RectState.PRESSED;
+            this.setState(RectState.PRESSED);
 
             this.key.attackRelease(this.duration * Tone.Time(BEAT_LENGTH), true);
 
@@ -41,7 +41,7 @@ class Note extends Rect {
             }
         }
         else {
-            this.state = RectState.RELEASED;
+            this.setState(RectState.RELEASED);
         }
     }
 
@@ -96,7 +96,7 @@ class Note extends Rect {
             cursor("ew-resize");
         }
 
-        if (this.isMouseOver()) {
+        if (this.isMouseOver(-scroll, 0)) {
             if(this.isReleased()) {
                 this.setState(RectState.SELECTED);
             }

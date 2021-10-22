@@ -38,13 +38,14 @@ class Rect {
     mouseDragged() {
     }
 
-    isMouseOver() {
+    isMouseOver(deltaX = 0, deltaY = 0) {
         var minX = this.x
         var maxX = this.x + this.width
         var minY = this.y
         var maxY = this.y + this.height
 
-        if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY) {
+        if (mouseX + deltaX >= minX && mouseX + deltaX <= maxX &&
+            mouseY + deltaY >= minY && mouseY + deltaY <= maxY) {
             return true;
          }
 

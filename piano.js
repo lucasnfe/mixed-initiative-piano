@@ -126,8 +126,18 @@ class PianoRoll {
 
     mousePressed() {
         for (let key of this.keys) {
-            key.mousePressed();
+            if (key.isBlack() && key.mousePressed()) {
+                return true;
+            }
         }
+
+        for (let key of this.keys) {
+            if (!key.isBlack() && key.mousePressed()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     mouseDragged() {
@@ -143,8 +153,28 @@ class PianoRoll {
     }
 
     update() {
+        let activeKey = null;
+
         for (let key of this.keys) {
-            key.update();
+            if (key.isBlack()) {
+                key.update();
+
+                if (key.isSelected() || key.isPressed()) {
+                    activeKey = key;
+                }
+            }
+        }
+
+        for (let key of this.keys) {
+            if (!key.isBlack()) {
+                key.update();
+
+                if (activeKey) {
+                    if (key.isSelected()) {
+                        key.deselect();
+                    }
+                }
+            }
         }
     }
 

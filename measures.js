@@ -4,7 +4,16 @@ class Measures extends Rect {
     }
 
     update() {
-
+        if (this.isPressed()) {
+            if (mouseX > windowWidth - MEASURE_SCROLL_AREA) {
+                horizontalScroll.moveRight();
+                ruler.head.dragTo(-scroll + mouseX);
+            }
+            else if (mouseX < ROLL_X - MEASURE_SCROLL_AREA) {
+                horizontalScroll.moveLeft();
+                ruler.head.dragTo(-scroll + mouseX);
+            }
+        }
     }
 
     mousePressed() {
@@ -12,22 +21,22 @@ class Measures extends Rect {
             this.setState(RectState.PRESSED);
 
             piano.pause();
-            ruler.head.dragTo(mouseX);
+            ruler.head.dragTo(-scroll + mouseX);
         }
     }
 
     mouseDragged() {
         if (mouseIsPressed && this.isPressed()) {
             piano.pause();
-            ruler.head.dragTo(mouseX);
+            ruler.head.dragTo(-scroll + mouseX)
         }
     }
 
     mouseReleased() {
         if (this.isPressed()) {
-            ruler.head.dropTo(mouseX);
+            ruler.head.dropTo(-scroll + mouseX);
 
-            let beat = round((mouseX - roll.x)/roll.beatWidth);
+            let beat = round((-scroll + mouseX - roll.x)/roll.beatWidth);
             ruler.head.setBeat(beat);
         }
 
@@ -42,7 +51,7 @@ class Measures extends Rect {
         let measure_div = Tone.Time("1m")/Tone.Time(BEAT_LENGTH);
         let quarter_div = Tone.Time("4n")/Tone.Time(BEAT_LENGTH);
 
-        for (let j0 = 0; j0 <= roll.nColumns/measure_div; j0++) {
+        for (let j0 = 0; j0 < roll.nColumns/measure_div; j0++) {
             let x0 = this.x + j0 * BEAT_WIDTH * measure_div;
             let y0 = this.y;
 

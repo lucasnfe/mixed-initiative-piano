@@ -26,6 +26,10 @@ class Roll {
         }
 
         if(this.isInserting) {
+            // let s1 = Math.floor(-scroll/roll.beatWidth);
+            // let s2 = s1 * roll.beatWidth;
+            // let delta = -scroll - s2;
+
             let x = Math.floor((mouseY - this.y)/this.beatHeight);
             let y = Math.floor((mouseX - this.x)/this.beatWidth);
 
@@ -49,9 +53,14 @@ class Roll {
             this.drawNote(this.insertStartPosition.x, min_y, max_y - min_y + 1);
         }
 
+        // Notes have to be translated
+        push()
+        translate(scroll, 0);
+
         for (let note of this.notes) {
             note.draw();
         }
+        pop()
     }
 
     drawStatic() {
@@ -70,7 +79,6 @@ class Roll {
                 for (let k = 0; k < this.nColumns; k++) {
                     let note_x = this.x + k * this.beatWidth;
                     let note_y = this.y + (i * N_KEYS_PER_OCTAVE + j) * this.beatHeight;
-
                     staticItems.rect(note_x, note_y, this.beatWidth, this.beatHeight);
                 }
             }
@@ -112,16 +120,18 @@ class Roll {
         let i1 = this.insertEndPosition.x;
         let j1 = this.insertEndPosition.y;
 
+        let j2 = Math.floor(-scroll/roll.beatWidth);
+
         let note = null;
         let velocity = 0.5;
 
         if (j0 <= j1) {
             let duration = j1 - j0 + 1;
-            note = new Note(i0, j0, duration, velocity);
+            note = new Note(i0, j0 + j2, duration, velocity);
         }
         else {
             let duration = j0 - j1 + 1;
-            note = new Note(i0, j1, duration, velocity);
+            note = new Note(i0, j1 + j2, duration, velocity);
         }
 
         this.notes.push(note);

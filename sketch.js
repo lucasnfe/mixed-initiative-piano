@@ -3,6 +3,7 @@ let piano = null;
 
 const PIANO_X = 0;
 const PIANO_Y = 80;
+const PIANO_WIDTH = 5000;
 const PIANO_HEIGHT = 500;
 const PIANO_NUM_OCTAVES = 3;
 
@@ -12,6 +13,13 @@ const ROLL_Y = PIANO_Y;
 const BEAT_WIDTH = 20;
 const BEAT_LENGTH = "8n";
 
+const MEASURE_SCROLL_AREA = 10;
+
+const HORIZONTAL_SCROLL_X = ROLL_X;
+const HORIZONTAL_SCROLL_Y = PIANO_HEIGHT + 85;
+
+let scroll = 0;
+
 // Input state
 let isMousePressed = false;
 
@@ -20,7 +28,7 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     background(255);
 
-    staticItems = createGraphics(windowWidth, windowHeight);
+    staticItems = createGraphics(PIANO_WIDTH, windowHeight);
     staticItems.clear();
 
     // Set the tempo in beats per minute.
@@ -28,10 +36,10 @@ function setup() {
     Tone.Transport.start();
 
     // Create piano
-    piano = new PianoRoll(PIANO_X, PIANO_Y, windowWidth, PIANO_HEIGHT, PIANO_NUM_OCTAVES);
+    piano = new PianoRoll(PIANO_X, PIANO_Y, PIANO_WIDTH, PIANO_HEIGHT, PIANO_NUM_OCTAVES);
 
     // Create roll
-    const nBeats = Math.floor((windowWidth - ROLL_X)/BEAT_WIDTH);
+    const nBeats = Math.floor((PIANO_WIDTH - ROLL_X)/BEAT_WIDTH);
     const beatHeight = piano.height/piano.nKeys;
 
     roll = new Roll(ROLL_X, ROLL_Y, piano.nKeys, nBeats, BEAT_WIDTH, beatHeight);
@@ -49,6 +57,9 @@ function setup() {
     const measuresHeight = 30;
     measures = new Measures(ROLL_X, ROLL_Y - measuresHeight, roll.getLength(), measuresHeight);
     measures.draw();
+
+    // Create horizontal scroll bar
+    horizontalScroll = new Scroll(HORIZONTAL_SCROLL_X, HORIZONTAL_SCROLL_Y, 100, 10);
 }
 
 function draw() {
@@ -62,9 +73,9 @@ function draw() {
     }
 
     // Draw static objects
-    image(staticItems, 0, 0);
+    image(staticItems, scroll, 0);
 
-    // Draw dynamic objects
+    // Update dynamic objects
     piano.update();
     roll.update();
     ruler.update();
@@ -77,14 +88,27 @@ function draw() {
         measures.update();
     }
 
-    piano.draw();
     roll.draw();
+
+    push();
+    translate(scroll, 0);
     ruler.draw();
+    pop();
+
+    horizontalScroll.draw();
+
+    // Draw hidden area
+    fill(255);
+    noStroke();
+    rect(0, 0, ROLL_X, windowHeight);
+
+    piano.draw();
 }
 
 function mousePressed() {
     piano.mousePressed();
     roll.mousePressed();
+    horizontalScroll.mousePressed();
 
     if (!roll.isInserting) {
         measures.mousePressed();
@@ -94,6 +118,7 @@ function mousePressed() {
 function mouseReleased() {
     piano.mouseReleased();
     roll.mouseReleased();
+    horizontalScroll.mouseReleased();
 
     if (!roll.isInserting) {
         measures.mouseReleased();
@@ -103,6 +128,7 @@ function mouseReleased() {
 function mouseDragged() {
     piano.mouseDragged();
     roll.mouseDragged();
+    horizontalScroll.mouseDragged();
 
     if (!roll.isInserting) {
         measures.mouseDragged();
@@ -138,7 +164,9 @@ function keyReleased(event) {
 }
 
 function setInserting(isInserting) {
-    roll.isInserting = isInserting;
+    if (!ruler.head.isDragging) {
+        roll.isInserting = isInserting;
+    }
 }
 
 function deleteNote() {
