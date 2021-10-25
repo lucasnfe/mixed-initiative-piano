@@ -39,10 +39,12 @@ class Note extends Rect {
             if (this.allowEdit > 0) {
                 this.isEditing = true;
             }
+
+            return true;
         }
-        else {
-            this.setState(RectState.RELEASED);
-        }
+
+        this.setState(RectState.RELEASED);
+        return false;
     }
 
     mouseDragged() {
@@ -102,6 +104,8 @@ class Note extends Rect {
             }
 
             if (!this.isEditing) {
+                this.allowEdit = 0;
+
                 let editDeltaLeft  = abs(this.x - mouseX);
                 let editDeltaRight = abs(this.x + this.width - mouseX);
 

@@ -5,7 +5,7 @@ class Measures extends Rect {
 
     update() {
         if (this.isPressed()) {
-            if (mouseX > windowWidth - MEASURE_SCROLL_AREA) {
+            if (mouseX > WINDOW_WIDTH - MEASURE_SCROLL_AREA) {
                 horizontalScroll.moveRight();
                 ruler.head.dragTo(-scroll + mouseX);
             }

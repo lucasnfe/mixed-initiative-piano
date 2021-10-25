@@ -4,7 +4,7 @@ const BLACK_KEY_INDEX = new Set([1, 3, 5, 8, 10]);
 const N_KEYS_PER_OCTAVE = WHITE_KEY_INDEX.size + BLACK_KEY_INDEX.size;
 
 class PianoRoll {
-    constructor(x, y, width, height, nOctaves, keyWidth = 120) {
+    constructor(x, y, width, height, nOctaves) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -13,7 +13,7 @@ class PianoRoll {
         this.nKeys = nOctaves * N_KEYS_PER_OCTAVE;
         this.isPlaying = false;
 
-        this.keyWidth = keyWidth;
+        this.keyWidth = this.width;
         this.keyHeight = this.height/(this.nOctaves * WHITE_KEY_INDEX.size);
 
         this.createSampler();

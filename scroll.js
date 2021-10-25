@@ -16,8 +16,8 @@ class Scroll extends Rect {
     mouseDragged() {
         if (this.isPressed()) {
             this.x = mouseX + this.clickDelta.x;
-            this.x = constrain(this.x, roll.x, windowWidth - this.width);
-            scroll = -map(this.x, roll.x, windowWidth - this.width, 0, roll.x + roll.getLength() - windowWidth);
+            this.x = constrain(this.x, roll.x, WINDOW_WIDTH - this.width);
+            scroll = -map(this.x, roll.x, WINDOW_WIDTH - this.width, 0, roll.x + roll.getLength() - WINDOW_WIDTH);
         }
     }
 
@@ -27,18 +27,19 @@ class Scroll extends Rect {
 
     moveLeft(speed=2) {
         this.x += -speed;
-        this.x = constrain(this.x, roll.x, windowWidth - this.width);
-        scroll = -map(this.x, roll.x, windowWidth - this.width, 0, roll.x + roll.getLength() - windowWidth);
+        this.x = constrain(this.x, roll.x, WINDOW_WIDTH - this.width);
+        scroll = -map(this.x, roll.x, WINDOW_WIDTH - this.width, 0, roll.x + roll.getLength() - WINDOW_WIDTH);
     }
 
     moveRight(speed=2) {
         this.x += speed;
-        this.x = constrain(this.x, roll.x, windowWidth - this.width);
-        scroll = -map(this.x, roll.x, windowWidth - this.width, 0, roll.x + roll.getLength() - windowWidth);
+        this.x = constrain(this.x, roll.x, WINDOW_WIDTH - this.width);
+        scroll = -map(this.x, roll.x, WINDOW_WIDTH - this.width, 0, roll.x + roll.getLength() - WINDOW_WIDTH);
     }
 
     draw() {
         fill(100);
+        noStroke();
         rect(this.x, this.y, this.width, this.height, 20);
     }
 }
