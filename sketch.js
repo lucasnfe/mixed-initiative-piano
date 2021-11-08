@@ -96,12 +96,12 @@ function draw() {
         measures.update();
     }
 
-    roll.draw();
     horizontalScroll.draw();
     minimap.draw();
 
     push();
     translate(scroll, 0);
+    roll.draw();
     ruler.draw();
     pop();
 
@@ -172,7 +172,7 @@ function keyReleased(event) {
 }
 
 function setInserting(isInserting) {
-    if (!ruler.head.isDragging) {
+    if (!mouseIsPressed) {
         roll.isInserting = isInserting;
     }
 }

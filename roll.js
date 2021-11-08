@@ -17,7 +17,7 @@ class Roll {
 
     update() {
         for (let note of this.notes) {
-            if (this.isInserting || ruler.head.isDragging) {
+            if (this.isInserting) {
                 note.setState(RectState.RELEASED);
             }
             else {
@@ -26,41 +26,33 @@ class Roll {
         }
 
         if(this.isInserting) {
-            // let s1 = Math.floor(-scroll/roll.beatWidth);
-            // let s2 = s1 * roll.beatWidth;
-            // let delta = -scroll - s2;
+            let i = Math.floor((mouseY - this.y)/this.beatHeight);
+            let j = Math.floor((mouseX - this.x - scroll)/this.beatWidth);
 
-            let x = Math.floor((mouseY - this.y)/this.beatHeight);
-            let y = Math.floor((mouseX - this.x)/this.beatWidth);
-
-            x = constrain(x, 0, this.nRows - 1);
-            y = constrain(y, 0, this.nColumns - 1);
+            i = constrain(i, 0, this.nRows - 1);
+            j = constrain(j, 0, this.nColumns - 1);
 
             if (!mouseIsPressed) {
-                this.insertStartPosition.x = x;
-                this.insertStartPosition.y = y;
+                this.insertStartPosition.x = i;
+                this.insertStartPosition.y = j;
             }
 
-            this.insertEndPosition.x = x;
-            this.insertEndPosition.y = y;
+            this.insertEndPosition.x = i;
+            this.insertEndPosition.y = j;
         }
     }
 
     draw() {
+        // Notes have to be translated
         if (this.isInserting) {
             let min_y = min(this.insertStartPosition.y, this.insertEndPosition.y);
             let max_y = max(this.insertStartPosition.y, this.insertEndPosition.y);
             this.drawNote(this.insertStartPosition.x, min_y, max_y - min_y + 1);
         }
 
-        // Notes have to be translated
-        push()
-        translate(scroll, 0);
-
         for (let note of this.notes) {
             note.draw();
         }
-        pop()
     }
 
     drawStatic() {
@@ -120,18 +112,16 @@ class Roll {
         let i1 = this.insertEndPosition.x;
         let j1 = this.insertEndPosition.y;
 
-        let j2 = Math.floor(-scroll/roll.beatWidth);
-
         let note = null;
         let velocity = 0.5;
 
         if (j0 <= j1) {
             let duration = j1 - j0 + 1;
-            note = new Note(i0, j0 + j2, duration, velocity);
+            note = new Note(i0, j0, duration, velocity);
         }
         else {
             let duration = j0 - j1 + 1;
-            note = new Note(i0, j1 + j2, duration, velocity);
+            note = new Note(i0, j1, duration, velocity);
         }
 
         this.notes.push(note);
