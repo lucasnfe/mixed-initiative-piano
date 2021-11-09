@@ -106,11 +106,14 @@ function draw() {
     pop();
 
     // Draw hidden area
+    drawHiddenArea();
+    piano.draw();
+}
+
+function drawHiddenArea() {
     fill(255);
     noStroke();
     rect(0, 0, ROLL_X - 5, WINDOW_HEIGHT);
-
-    piano.draw();
 }
 
 function mousePressed() {

@@ -31,8 +31,8 @@ class RulerHead {
     }
 
     moveTo(x) {
-        this.x = x - this.width/2;
-        this.x = constrain(this.x, roll.x - this.width/2, roll.x + roll.getLength());
+        this.x = x - this.width/2 + 0.5;
+        this.x = constrain(this.x, roll.x - this.width/2, roll.x - this.width/2 + roll.getLength());
     }
 
     draw() {
@@ -61,13 +61,16 @@ class Ruler {
     }
 
     update() {
-        //
         if (this.head.isDragging) {
-            this.x = this.head.x + this.head.width/2 - 0.5;
+            this.updatePosition();
         }
         else {
             this.setBeat(this.head.beat);
         }
+    }
+
+    updatePosition() {
+        this.x = this.head.x + this.head.width/2 - 0.5;
     }
 
     setBeat(beatNumber) {

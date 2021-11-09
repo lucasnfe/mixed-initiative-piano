@@ -8,10 +8,12 @@ class Measures extends Rect {
             if (mouseX > WINDOW_WIDTH - MEASURE_SCROLL_AREA) {
                 horizontalScroll.moveRight();
                 ruler.head.dragTo(-scroll + mouseX);
+                ruler.updatePosition();
             }
-            else if (mouseX < ROLL_X - MEASURE_SCROLL_AREA) {
+            else if (mouseX < ROLL_X) {
                 horizontalScroll.moveLeft();
                 ruler.head.dragTo(-scroll + mouseX);
+                ruler.updatePosition();
             }
         }
     }
